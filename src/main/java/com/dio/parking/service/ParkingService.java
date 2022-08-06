@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.dio.parking.exception.ParkingNotFoundException;
 import com.dio.parking.model.Parking;
 
 @Service
@@ -34,7 +35,10 @@ public class ParkingService {
 	}
 
 	public Parking findById(String id) {
-		return parkingMap.get(id);
+		Parking parking = parkingMap.get(id);
+		if (parking == null)
+			throw new ParkingNotFoundException(id);
+		return parking;
 	}
 
 	public Parking create(Parking parkingCreate) {
