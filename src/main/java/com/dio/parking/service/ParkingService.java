@@ -1,60 +1,65 @@
 package com.dio.parking.service;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.dio.parking.exception.ParkingNotFoundException;
 import com.dio.parking.model.Parking;
+import com.dio.parking.repository.ParkingRepository;
 
 @Service
 public class ParkingService {
 
-	private static Map<String, Parking> parkingMap = new HashMap<>();
+	private final ParkingRepository parkingRepository;
 
-	public List<Parking> findAll() {
-		return parkingMap.values().stream().collect(Collectors.toList());
+	public ParkingService(ParkingRepository parkingRepository) {
+		this.parkingRepository = parkingRepository;
 	}
 
 	private static String getUUID() {
 		return UUID.randomUUID().toString().replace("-", "");
 	}
+	
+	public List<Parking> findAll() {
+		return parkingRepository.findAll();
+	}
 
 	public Parking findById(String id) {
-		Parking parking = parkingMap.get(id);
-		if (parking == null)
-			throw new ParkingNotFoundException(id);
-		return parking;
+		return parkingRepository.findById(id).orElseThrow(() -> new ParkingNotFoundException(id));
 	}
 
 	public Parking create(Parking parkingCreate) {
 		String uuid = getUUID();
 		parkingCreate.setId(uuid);
 		parkingCreate.setEntryDate(LocalDateTime.now());
-		parkingMap.put(uuid, parkingCreate);
+		parkingRepository.save(parkingCreate);
 		return parkingCreate;
 	}
 
 	public void delete(String id) {
 		findById(id);
-		parkingMap.remove(id);
+		parkingRepository.deleteById(id);
 	}
 
 	public Parking update(String id, Parking parkingUpdate) {
 		Parking parking = findById(id);
 		parking.setColor(parkingUpdate.getColor());
-		parkingMap.replace(id, parking);
+		parking.setLicense(parkingUpdate.getLicense());
+		parking.setState(parkingUpdate.getState());
+		parking.setModel(parkingUpdate.getModel());
+		parkingRepository.save(parking);
 		return parking;
 	}
 
-	public Parking exit(String id) {
-		// TODO [1] Find the parking, [2] Update the exit date and [3] calculate the bill
-		return null;
+	public Parking checkout(String id) {
+		Parking parking = findById(id);
+		parking.setExitDate(LocalDateTime.now());
+		parking.setBill(ParkingCheckout.getBill(parking));
+		parkingRepository.save(parking);
+		return parking;
 	}
 
 }

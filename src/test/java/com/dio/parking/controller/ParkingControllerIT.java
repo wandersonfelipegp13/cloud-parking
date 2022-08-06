@@ -29,8 +29,7 @@ class ParkingControllerIT {
 				.when()
 				.get("/parking")
 				.then()
-				.statusCode(HttpStatus.OK.value())
-				.body("license[0]", Matchers.equalTo("KSN-3843"));
+				.statusCode(HttpStatus.OK.value());
 	}
 
 	@Test
