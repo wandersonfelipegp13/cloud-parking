@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,7 +44,7 @@ public class ParkingController {
 	}
 	
 	@GetMapping("/{id}")
-	@ApiOperation("Find a parking by its ID")
+	@ApiOperation("Finds a parking by its ID")
 	public ResponseEntity<ParkingDTO> findById(@PathVariable String id) {
 		Parking parking = this.parkingService.findById(id);
 		ParkingDTO result = parkingMapper.toParkingDTO(parking);
@@ -51,19 +52,28 @@ public class ParkingController {
 	}
 	
 	@DeleteMapping("/{id}")
-	@ApiOperation("Delete a parking by its ID")
+	@ApiOperation("Deletes a parking by its ID")
 	public ResponseEntity delete(@PathVariable String id) {
 		this.parkingService.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 	
 	@PostMapping
-	@ApiOperation("Create a new parking")
+	@ApiOperation("Creates a new parking")
 	public ResponseEntity<ParkingDTO> create(@RequestBody ParkingCreateDTO parkingCreateDTO) {
 		var parkingCreate = parkingMapper.toParkingCreate(parkingCreateDTO);
 		Parking parking = this.parkingService.create(parkingCreate);
 		ParkingDTO result = parkingMapper.toParkingDTO(parking);
 		return ResponseEntity.status(HttpStatus.CREATED).body(result);
+	}
+	
+	@PutMapping("/{id}")
+	@ApiOperation("Updates a parking")
+	public ResponseEntity<ParkingDTO> update(@PathVariable String id, @RequestBody ParkingCreateDTO parkingCreateDTO) {
+		var parkingUpdate = parkingMapper.toParkingCreate(parkingCreateDTO);
+		Parking parking = this.parkingService.update(id, parkingUpdate);
+		ParkingDTO result = parkingMapper.toParkingDTO(parking);
+		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
 	
 }
