@@ -72,8 +72,14 @@ public class ParkingController {
 	public ResponseEntity<ParkingDTO> update(@PathVariable String id, @RequestBody ParkingCreateDTO parkingCreateDTO) {
 		var parkingUpdate = parkingMapper.toParkingCreate(parkingCreateDTO);
 		Parking parking = this.parkingService.update(id, parkingUpdate);
-		ParkingDTO result = parkingMapper.toParkingDTO(parking);
-		return ResponseEntity.status(HttpStatus.OK).body(result);
+		return ResponseEntity.ok(parkingMapper.toParkingDTO(parking));
+	}
+	
+	@PostMapping("/{id}")
+	@ApiOperation("Updates the exit date of a parking")
+	public ResponseEntity<ParkingDTO> exit(@PathVariable String id) {
+		Parking parking = this.parkingService.exit(id);
+		return ResponseEntity.ok(parkingMapper.toParkingDTO(parking));
 	}
 	
 }

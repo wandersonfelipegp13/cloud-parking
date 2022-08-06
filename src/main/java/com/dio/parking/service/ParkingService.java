@@ -17,15 +17,6 @@ public class ParkingService {
 
 	private static Map<String, Parking> parkingMap = new HashMap<>();
 
-	static {
-		var id = getUUID();
-		Parking parking = new Parking(id, "DMS-1111", "SC", "CELTA", "PRETO");
-		parkingMap.put(id, parking);
-		id = getUUID();
-		parking = new Parking(id, "WAS-1234", "SP", "VW GOL", "BRANCO");
-		parkingMap.put(id, parking);
-	}
-
 	public List<Parking> findAll() {
 		return parkingMap.values().stream().collect(Collectors.toList());
 	}
@@ -59,6 +50,11 @@ public class ParkingService {
 		parking.setColor(parkingUpdate.getColor());
 		parkingMap.replace(id, parking);
 		return parking;
+	}
+
+	public Parking exit(String id) {
+		// TODO [1] Find the parking, [2] Update the exit date and [3] calculate the bill
+		return null;
 	}
 
 }
