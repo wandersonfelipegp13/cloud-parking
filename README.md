@@ -6,7 +6,7 @@ Foi desenvolvida em um Desafio de Projeto, ministrado pelo especialista [Sandro 
 
 São usadas todas as boas práticas de desenvolvimento de API's incluindo segurança com Spring Security e acesso a banco de dados PostgreSQL. 
 
-O deploy é feito na cloud do Heroku, e está disponível [aqui](https://cloud-parking-wf.herokuapp.com/swagger-ui.html).
+O deploy foi feito na cloud do Heroku.
 
 # Como rodar o projeto
 
